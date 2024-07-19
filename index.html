@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Luxueux du Royaume Hachémite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Amiri&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --royal-gold: #D4AF37;
+            --deep-sapphire: #082567;
+            --rich-burgundy: #800020;
+            --emerald-green: #50C878;
+            --amethyst-purple: #9966CC;
+            --desert-sand: #EDC9AF;
+            --dead-sea-blue: #4682B4;
+            --petra-rose: #E8ADAA;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #F0E68C;
+            background-image: linear-gradient(45deg, #F0E68C 25%, #FAFAD2 25%, #FAFAD2 50%, #F0E68C 50%, #F0E68C 75%, #FAFAD2 75%, #FAFAD2 100%);
+            background-size: 56.57px 56.57px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--deep-sapphire);
+        }
+        
+        h1 {
+            color: var(--royal-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 3em;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1200px;
+        }
+        
+        .card {
+            width: 220px;
+            height: 380px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center;
+            border: 4px solid var(--royal-gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .card-back {
+            background-color: var(--deep-sapphire);
+            color: var(--royal-gold);
+            font-weight: bold;
+            font-size: 1.2em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="50" y="50" font-size="80" text-anchor="middle" alignment-baseline="middle" font-family="Arial" fill="%23D4AF37">☪</text></svg>');
+            background-size: 50px 50px;
+            background-repeat: repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .card-back-text {
+            background-color: rgba(8, 37, 103, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            width: 80%;
+            margin: 10px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .card-back-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .card-back-symbols {
+            font-size: 1.5em;
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, white, #f0f0f0);
+            transform: rotateY(180deg);
+            overflow: hidden;
+        }
+        
+        .card-symbol {
+            font-size: 4em;
+            margin-bottom: 15px;
+            color: var(--royal-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: var(--deep-sapphire);
+        }
+        
+        .arabic-name {
+            font-family: 'Amiri', serif;
+            font-size: 0.9em;
+            color: var(--rich-burgundy);
+            margin-top: 10px;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--royal-gold);
+            border-radius: 50%;
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--royal-gold);
+            background-color: var(--deep-sapphire);
+        }
+        
+        .additional-symbols {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Le Tarot Luxueux du Royaume Hachémite</h1>
+    <div class="card-container" id="cardContainer"></div>
+
+    <script>
+        const majorArcana = [{
+            name: "Le Fou : L'explorateur du désert",
+            arabicName: "المجنون: مستكشف الصحراء",
+            symbol: "🏜️",
+            additionalSymbols: ["🐪", "🌵", "🧭"]
+        }, {
+            name: "Le Bateleur : L'artisan bédouin",
+            arabicName: "الساحر: الحرفي البدوي",
+            symbol: "🏺",
+            additionalSymbols: ["🧵", "🔨", "🎭"]
+        }, {
+            name: "La Papesse : La reine Rania",
+            arabicName: "الكاهنة: الملكة رانيا",
+            symbol: "👑",
+            additionalSymbols: ["📚", "🎓", "🤝"]
+        }, {
+            name: "L'Impératrice : Petra",
+            arabicName: "الإمبراطورة: البتراء",
+            symbol: "🏛️",
+            additionalSymbols: ["🐎", "⛰️", "🏺"]
+        }, {
+            name: "L'Empereur : Le roi Abdullah II",
+            arabicName: "الإمبراطور: الملك عبد الله الثاني",
+            symbol: "👑",
+            additionalSymbols: ["🦅", "🗡️", "🛡️"]
+        }, {
+            name: "Le Pape : Le gardien d'Al-Aqsa",
+            arabicName: "البابا: حارس الأقصى",
+            symbol: "🕌",
+            additionalSymbols: ["📿", "☪️", "📖"]
+        }, {
+            name: "L'Amoureux : Le mariage bédouin",
+            arabicName: "العاشق: الزواج البدوي",
+            symbol: "💑",
+            additionalSymbols: ["🐫", "🌙", "🎶"]
+        }, {
+            name: "Le Chariot : La Route des Rois",
+            arabicName: "العربة: طريق الملوك",
+            symbol: "🛣️",
+            additionalSymbols: ["🏰", "🐎", "🏜️"]
+        }, {
+            name: "La Justice : La Constitution jordanienne",
+            arabicName: "العدالة: الدستور الأردني",
+            symbol: "⚖️",
+            additionalSymbols: ["📜", "🏛️", "✍️"]
+        }, {
+            name: "L'Hermite : Le sage du désert",
+            arabicName: "الناسك: حكيم الصحراء",
+            symbol: "🧙",
+            additionalSymbols: ["🔮", "🏔️", "🌠"]
+        }, {
+            name: "La Roue de Fortune : Le tourisme jordanien",
+            arabicName: "عجلة الحظ: السياحة الأردنية",
+            symbol: "🎡",
+            additionalSymbols: ["🏛️", "🏖️", "🧳"]
+        }, {
+            name: "La Force : La résilience jordanienne",
+            arabicName: "القوة: الصمود الأردني",
+            symbol: "💪",
+            additionalSymbols: ["🦁", "🌳", "🌊"]
+        }, {
+            name: "Le Pendu : Le plongeur d'Aqaba",
+            arabicName: "المعلق: غواص العقبة",
+            symbol: "🤿",
+            additionalSymbols: ["🐠", "🌊", "🏝️"]
+        }, {
+            name: "La Mort : Le renouveau du désert",
+            arabicName: "الموت: تجدد الصحراء",
+            symbol: "🌱",
+            additionalSymbols: ["🦂", "🌺", "☀️"]
+        }, {
+            name: "La Tempérance : L'hospitalité jordanienne",
+            arabicName: "الاعتدال: الضيافة الأردنية",
+            symbol: "☕",
+            additionalSymbols: ["🍵", "🍽️", "🤲"]
+        }, {
+            name: "Le Diable : Les défis économiques",
+            arabicName: "الشيطان: التحديات الاقتصادية",
+            symbol: "💼",
+            additionalSymbols: ["💱", "📊", "🏗️"]
+        }, {
+            name: "La Maison Dieu : La résilience face aux crises",
+            arabicName: "البرج: الصمود أمام الأزمات",
+            symbol: "🏛️",
+            additionalSymbols: ["🌪️", "🔥", "🛠️"]
+        }, {
+            name: "L'Étoile : L'espoir pour la paix",
+            arabicName: "النجمة: الأمل في السلام",
+            symbol: "⭐",
+            additionalSymbols: ["🕊️", "🌈", "🤝"]
+        }, {
+            name: "La Lune : Les mystères du Wadi Rum",
+            arabicName: "القمر: أسرار وادي رم",
+            symbol: "🌙",
+            additionalSymbols: ["🏜️", "🐪", "🔭"]
+        }, {
+            name: "Le Soleil : La prospérité future",
+            arabicName: "الشمس: الازدهار المستقبلي",
+            symbol: "☀️",
+            additionalSymbols: ["🌾", "💡", "🏙️"]
+        }, {
+            name: "Le Jugement : La renaissance culturelle",
+            arabicName: "الدينونة: النهضة الثقافية",
+            symbol: "🎭",
+            additionalSymbols: ["🎨", "📚", "🎶"]
+        }, {
+            name: "Le Monde : La Jordanie sur la scène internationale",
+            arabicName: "العالم: الأردن على الساحة الدولية",
+            symbol: "🌍",
+            additionalSymbols: ["🇯🇴", "🤝", "🕊️"]
+        }];
+
+        const colors = [
+            'var(--royal-gold)', 'var(--deep-sapphire)', 'var(--rich-burgundy)', 'var(--emerald-green)',
+            'var(--amethyst-purple)', 'var(--desert-sand)', 'var(--dead-sea-blue)', 'var(--petra-rose)'
+        ];
+
+        const cardContainer = document.getElementById('cardContainer');
+
+        majorArcana.forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            const colorIndex = index % colors.length;
+            cardElement.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-face card-back">
+                        <div class="card-back-text">
+                            <div class="card-back-title">Tarot du Royaume Hachémite</div>
+                            <div class="card-back-symbols">☪ ★ ☪</div>
+                        </div>
+                    </div>
+                    <div class="card-face card-front" style="background: linear-gradient(135deg, ${colors[colorIndex]}, white);">
+                        <div class="card-number">${index}</div>
+                        <div class="card-symbol">${card.symbol}</div>
+                        <div class="card-name">${card.name}</div>
+                        <div class="arabic-name">${card.arabicName}</div>
+                        <div class="additional-symbols">${card.additionalSymbols.join(' ')}</div>
+                    </div>
+                </div>
+            `;
+            cardContainer.appendChild(cardElement);
+        });
+    </script>
+</body>
+
+</html>
